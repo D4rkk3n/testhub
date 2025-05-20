@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Read Aloud</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 60px;
+      width: 100%;
+      box-sizing: border-box;
+      background-color: transparent;
+    }
+
+    button {
+      font-size: 16px;
+      padding: 10px 20px;
+      border-radius: 6px;
+      background-color: #0078d4;
+      color: white;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    button:hover {
+      background-color: #005a9e;
+    }
+  </style>
+</head>
+<body>
+  <button onclick="readArticle()">🔊 Read Article Aloud</button>
+
+  <script>
+    function readArticle() {
+      try {
+        const parentDoc = window.parent.document;
+        const elements = parentDoc.querySelectorAll('article h1, article h2, article h3, article p');
+
+        if (!elements.length) {
+          alert("Could not find article content.");
+          return;
+        }
+
+        const text = Array.from(elements)
+          .map(el => el.innerText.trim())
+          .filter(t => t.length > 0)
+          .join(' ');
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        speechSynthesis.cancel(); // Stop any previous speech
+        speechSynthesis.speak(utterance);
+      } catch (error) {
+        alert("Error reading article: " + error.message);
+      }
+    }
+  </script>
+</body>
+</html>
